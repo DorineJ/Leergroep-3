@@ -1,0 +1,22 @@
+#links
+0 **x* -> W 0
+
+0 **W* -> N 5
+
+5 ***x -> S 5
+
+5 ***S -> X 3
+
+#omhoog
+3 x*** -> N 3
+
+#opzij
+3 N*** -> E 1
+
+#beneden
+1 N*** -> S 2
+
+2 ***x -> S 2
+
+#opzij
+2 ***S -> E 3
