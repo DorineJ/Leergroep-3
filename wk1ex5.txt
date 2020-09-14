@@ -1,0 +1,26 @@
+#links
+0 **x* -> W 0
+0 **W* -> X 1
+
+#beneden of boven
+1 N*Wx -> S 0
+1 x*WS -> N 0
+1 N*WS -> X 2
+
+#zigzag 
+2 N*WS -> E 2
+2 xxxx -> X 3
+
+#omhoog
+3 x*** -> N 3
+3 N*** -> X 4
+
+#beneden
+4 ***x -> S 4
+4 ***S -> X 5
+
+#opzij
+5 *x*S -> E 5
+5 xE*S -> N 6
+6 xxxx -> E 3
+5 **** -> X 3
