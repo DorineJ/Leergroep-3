@@ -113,3 +113,13 @@ def blsort(L):
         return 0
     else:
         return oc + lc #geen haken nodig, maakt er zelf al een lijst van
+    
+    def gensort(L): #nog niet werkend
+    """krijgt lijst en geeft dezelfde lijst terug maar dan in oplopende volgorde
+    arguments: int of float
+    """
+    if len(L) == 0:
+        return 0
+    else:
+        new_list = min(L) + L.remove(min(L)) + gensort(L[1:])
+        return new_list
