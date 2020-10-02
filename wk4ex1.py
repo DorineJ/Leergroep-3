@@ -21,7 +21,11 @@ def three_ize(L):
 
 
 # Te schrijven functie #1: scale
-
+def scale(L, scale_factor):
+    """ L is een lijst en die moet vermenigvuldigd worden met de scale_factor
+    """
+    Ls = [scale_factor * x for x in L]
+    return Ls
 
 # hier is een voorbeeld van hoe je op een andere
 # manier de functie three_ize kan schrijven:
@@ -36,13 +40,22 @@ def three_ize_by_index(L):
     return lc
 
 # Te schrijven functie #2: add_2
-
+def add_2(L, m):
+    n = min(len(L), len(m))
+    lc = [L[i] + m[i] for i in range(n)]
+    return lc
 
 # Te schrijven functie #3: add_3
-
+def add_3(L, m, p):
+    n = min(len(L), len(m), len(p))
+    lc = [L[i] + m[i] + p[i] for i in range(n)]
+    return lc
 
 # Te schrijven functie #4: add_scale_2
-
+def add_scale_2(L, m, L_scale, m_scale):
+    n = min(len(L), len(m))
+    lc = [(L[i] * L_scale) + (m[i] * m_scale) for i in range(n)]
+    return lc 
 
 # Hulpfunctie: randomize
 
@@ -63,7 +76,13 @@ def randomize(x, chance_of_replacing):
 
 
 # Te schrijven functie #5: replace_some
-
+def replace_some(L, chance_of_replacing): #nog niet werkend
+    import random
+    r = random.uniform(0, 1)
+    if r < chance_of_replacing:
+        return [random.uniform(-1000, 1000) for x in L]
+    else:
+        return L
 
 #
 # de functies hieronder betreffen geluidsbewerking...
