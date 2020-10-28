@@ -27,3 +27,16 @@ if onderwerp == "Het aantal besmettingen" or onderwerp == "het aantal besmetting
             
     #else:
         #print("Helaas er zijn geen gegevens voor deze datum te vinden!")
+        
+if onderwerp == "Het aantal ziekenhuisopnames" or onderwerp == "Aantal ziekenhuisopnames" or onderwerp == "het aantal ziekenhuisopnames" or onderwerp == "aantal ziekenhuisopnames":
+    
+    jaar= 2020
+    maand=int(input("Van welke maand wilt u informatie? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul het maandcijfer in:"))
+    dag=int(input("Van welke dag wilt u informatie? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul het cijfer van de dag in:"))
+    datum= datetime(jaar, maand, dag)
+    timestamp= datetime.timestamp(datum) + 3600
+    
+    for i in regio_data["results_per_region"]["values"]:
+        if i ["date_of_report_unix"] == timestamp:
+            aantal_ziekenhuisopnames = str(i["hospital_increase_per_region"])
+            print ("Het aantal ziekenhuisopnames is met " + aantal_ziekenhuisopnames + " opname(s) toegenomen")
