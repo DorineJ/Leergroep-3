@@ -1,1 +1,29 @@
-print("Welkom")
+import json
+from datetime import datetime 
+
+#openen en lezen van json bestand
+with open('json-dataVR01.json', 'r') as f:
+    regio_data = json.load(f)
+
+username = input("Goedendag, wat is uw naam?")
+print("\n Welkom bij het interactieve CoronaMelder informatiecentrum " + username )
+onderwerp = input(" \n Waar wilt u informatie over? Kies uit: \n ~ Het aantal besmettingen \n ~ Het aantal ziekenhuisopnames \n ~ Het aantal ziekenhuisverplaatsingen \n \n ")
+
+if onderwerp == "Het aantal besmettingen" or onderwerp == "het aantal besmettingen" or onderwerp == "Aantal besmettingen" or onderwerp == "aantal besmettingen" or onderwerp == "besmettingen" or onderwerp == "Besmettingenr":
+    maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het 'maandnummer' in. \n "))
+    dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het 'dagnummer' in. \n "))
+
+    datum = datetime(2020, maand, dag, 0, 0 ,0)
+    timestamp = datetime.timestamp(datum) + 3600 #omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil
+    #print(timestamp)
+
+    for i in regio_data["results_per_region"]["values"]:
+        if i["date_of_report_unix"] == timestamp:
+            aantal_besmettingen = str(i["infected_total_counts_per_region"])
+            aantal_toenames = str(i["total_reported_increase_per_region"])
+            print(" ")
+            print("Het aantal toenames van corona besmettingen op die dag is:  " + aantal_toenames)
+            print("Het totaal aantal corona besmettingen op die dag is:        " + aantal_besmettingen)
+            
+    #else:
+        #print("Helaas er zijn geen gegevens voor deze datum te vinden!")
