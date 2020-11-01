@@ -1,32 +1,85 @@
-import json
-from datetime import datetime 
+import json 
+from datetime import datetime  
+import matplotlib.pyplot as plt
+from colorama import Fore, Back, Style #kleurtjes voor de User Experience
 
 #openen en lezen van json bestand
 with open('json-dataVR01.json', 'r') as f:
     regio_data = json.load(f)
 
-username = input("Goedendag, wat is uw naam?")
-print("\n Welkom bij het interactieve CoronaMelder informatiecentrum " + username )
-onderwerp = input(" \n Waar wilt u informatie over? Kies uit: \n ~ Het aantal besmettingen \n ~ Het aantal ziekenhuisopnames \n ~ Het aantal ziekenhuisverplaatsingen \n \n ")
+username = input("Goedendag, wat is uw naam? \n")
 
-if onderwerp == "Het aantal besmettingen" or onderwerp == "het aantal besmettingen" or onderwerp == "Aantal besmettingen" or onderwerp == "aantal besmettingen" or onderwerp == "besmettingen" or onderwerp == "Besmettingenr":
-    maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het 'maandnummer' in. \n "))
-    dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het 'dagnummer' in. \n "))
+Exit = False #om programma te kunnen verlaten
 
-    datum = datetime(2020, maand, dag, 0, 0 ,0)
-    timestamp = datetime.timestamp(datum) + 3600 #omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil
-    #print(timestamp)
+while (not Exit):
+    print("\n Welkom bij het interactieve CoronaMelder informatiecentrum " + username + "!") 
+    onderwerp = input(" \n Waar wilt u informatie over? Kies uit: \n 1. Het aantal besmettingen \n 2. Het aantal ziekenhuisopnames \n 3. Het aantal ziekenhuisverplaatsingen \n 4. De toename in de hoeveelheid besmettingen per regio \n 5. Programma beeindigen. \n \n Vul het nummer van uw keuze in: \n ")
 
-    for i in regio_data["results_per_region"]["values"]:
-        if i["date_of_report_unix"] == timestamp:
-            aantal_besmettingen = str(i["infected_total_counts_per_region"])
-            aantal_toenames = str(i["total_reported_increase_per_region"])
-            print(" ")
-            print("Het aantal toenames van corona besmettingen op die dag is:  " + aantal_toenames)
-            print("Het totaal aantal corona besmettingen op die dag is:        " + aantal_besmettingen)
+#DIT STUK IS VAN DORINE ##################################################################################
+
+    if "1" in onderwerp:
+        #wat wil gebruiker weten, grafiek of informatie per dag?
+        welke_info = input("\n Welke informatie wilt u ontvangen? \n 1. Visualisatie van het totaal aantal besmettingen \n 2. Informatie van een specifieke dag \n \n Vul hier het nummer in: ")
             
-    #else:
-        #print("Helaas er zijn geen gegevens voor deze datum te vinden!")
+        if welke_info == "1" or welke_info == "1.": # keuze voor grafiek
+            print(Fore.GREEN + "\n De grafiek bevat informatie over de corona besmettingen van 16 maart t/m 6 oktober in VR Groningen en wordt geopend in een nieuw tabblad!")
+            print(Fore.RESET)
+            
+            besmetting_lijst = [] #de lijst voor op de y as
+            timestamp_lijst = [] #de lijst voor de datums
+            datum_lijst = [] #de lijst voor op de x as
+        
+            for x in regio_data["results_per_region"]["values"]: #gaat alle dagen bij langs en zet alles in lijsten
+                besmetting_lijst.append(x["total_reported_increase_per_region"]) 
+                timestamp_lijst.append(x["date_of_report_unix"]) 
+        
+            for stamp in timestamp_lijst: #zet de timestamplijst om naar echte datums
+                stamp_to_date1 = datetime.fromtimestamp(stamp).isoformat()
+                stamp_to_date2 = stamp_to_date1[5:10] #om format mm-dd te krijgen
+                datum_lijst.append(stamp_to_date2) #toevoegen aan lijst
+
+        #de grafiek de x-as kan overzictelijker want nu zijn de datums niet te lezen maar dat is me niet gelukt helaas
+            plt.plot(datum_lijst, besmetting_lijst)# de 2 lijsten in de plot zetten
+            plt.show()                   # grafiek laten zien in ander tabblad
+            plt.title("Het aantal besmettingen per dag van 16 maart t/m 6 oktober in VR Groningen") #titel
+            plt.xlabel("Datum") #datums op de x as
+            plt.ylabel("Besmettingen") #besmettingen op de y as
+            plt.pause(5) # Geeft de window tijd om te updaten: 5 sec is genoeg, maar window loopt vast na deze tijd
+            # Kan opgelost worden door een GUI te maken: https://stackoverflow.com/questions/34938593/matplotlib-freezes-when-input-used-in-spyder
+            
+        elif welke_info == "2" or welke_info == "2.": #keuze voor informatie per specifieke dag 
+
+            maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul hier het 'maandnummer'in: "))
+            dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul hier het 'dagnummer' in: "))
+            print(Fore.RESET) #groene kleur weer uit!
+            #de manier van vragen kan naar dd/mm/yyyy veranderd worden om User experience te verbeteren, maar weet niet hoe het moet
+           
+            datum = datetime(2020, maand, dag, 0, 0 ,0)
+            timestamp = datetime.timestamp(datum) + 3600 #omdat de timestamp niet overeen komt met die uit de coronamelder 
+            #ivm een uur tijdsverschil: waarschijnlijk het verschil zomertijd/ wintertijd
+            
+            timestampfound = False   #om te checken of er data is op de gegeven dag 
+            for data_punt in regio_data["results_per_region"]["values"]:
+                if data_punt["date_of_report_unix"] == timestamp:
+                    timestampfound = True
+                    aantal_besmettingen = str(data_punt["infected_total_counts_per_region"])
+                    aantal_toenames = str(data_punt["total_reported_increase_per_region"])
+                    print(" ")
+                    print(Fore.CYAN + "Het aantal toegenomen corona besmettingen op die dag is:  " + aantal_toenames)
+                    print("Het totaal aantal corona besmettingen is:                 " + aantal_besmettingen)
+                    print(Fore.RESET)
+                
+            if timestampfound == False:
+                print(Fore.RED + "Helaas, er zijn geen gegevens te vinden voor deze datum!") #als de datum niet in de data zit
+                print(Fore.RESET)
+                
+        else:
+            print("\nVermoedelijk heeft u een typefout gemaakt! \n")
+            
+    if "5" in onderwerp:
+        Exit = True
+
+#DIT STUK IS VAN LAUREEN ########################################################################################################
         
 if onderwerp == "Het aantal ziekenhuisopnames" or onderwerp == "Aantal ziekenhuisopnames" or onderwerp == "het aantal ziekenhuisopnames" or onderwerp == "aantal ziekenhuisopnames":
     
@@ -40,7 +93,8 @@ if onderwerp == "Het aantal ziekenhuisopnames" or onderwerp == "Aantal ziekenhui
         if i ["date_of_report_unix"] == timestamp:
             aantal_ziekenhuisopnames = str(i["hospital_increase_per_region"])
             print ("Het aantal ziekenhuisopnames is met " + aantal_ziekenhuisopnames + " opname(s) toegenomen")
-        
+ 
+#DIT STUK IS VAN ROBIN ########################################################################################################       
            
  if onderwerp == "Het aantal ziekenhuis verplaatsingen" or onderwerp == "het aantal ziekenhuis verplaatsingen" or onderwerp == "ziekenhuis verplaatsingen" or onderwerp == "ziekenhuisverplaatsing" or onderwerp == "Ziekenhuis verplaatsingen":
 
