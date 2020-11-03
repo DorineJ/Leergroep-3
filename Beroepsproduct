@@ -77,6 +77,7 @@ while (not Exit):
             print("\nVermoedelijk heeft u een typefout gemaakt! \n")
             
     if "5" in onderwerp:
+        print("Tot ziens!")
         Exit = True
 
 #DIT STUK IS VAN LAUREEN ########################################################################################################
