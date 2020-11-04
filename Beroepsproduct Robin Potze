@@ -1,0 +1,120 @@
+import json 
+import math 
+from datetime import datetime 
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+import numpy as np
+
+#stap1: open en lees het bestand json-data-vr01.json
+with open('json-data-vr01.json', 'r') as f:
+    regio_data = json.load(f)
+
+
+#start van het programma 
+username = input("Welkom bij het interactieve CoronaMelder informatiecentrum! \nDit is het informatiecentrum voor VR01: Groningen. \nLaten we beginnen! \n\nWat is uw naam? ")
+
+
+
+#gebruiker welkom heten 
+print("\nGoedendag " + username + "!" )
+print("\nIn dit informatiecentrum kunt u de volgende gegevens bekijken:\n- Aantal toenames van besmettingen op één dag \n- Totaal aantal besmettingen op één dag \n- Aantal toenames van ziekenhuisopnames op één dag \n- Totaal aantal ziekenhuisopnames op één dag ")
+print("\nOm deze gegevens van een bepaalde dag te kunnen bekijken, moet u eerst een datum kiezen.")
+
+
+
+#gebruiker om dag en maand vragen
+maand = int(input("\nVan welke maand wilt u informatie ontvangen? \n\nU kunt kiezen uit data tussen 1 april en 6 oktober \nVul aub het maandnummer in: \n "))
+dag = int(input("\n\nVan welke dag wilt u informatie ontvangen? \n\nU kunt kiezen uit data tussen 1 april en 6 oktober \nVul aub het 'dagnummer' in: \n "))
+
+datum = datetime(2020, maand, dag, 0, 0 ,0)
+timestamp = datetime.timestamp(datum) + 7200 
+
+#3600 werkt alleen voor maart, 7200 voor de rest van de maanden
+#omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil: zomer/wintertijd?
+
+
+
+#data vergelijken met timestamp en hieruit de gevraagde data printen
+for i in regio_data["results_per_region"]["values"]:
+            if i["date_of_report_unix"] == timestamp:
+                aantal_besmettingen = str(i["infected_total_counts_per_region"])
+                aantal_toenames = str(i["total_reported_increase_per_region"])
+                aantal_ziekenhuisopnames = str(i["hospital_total_counts_per_region"])
+                toename_ziekenhuisopnames = str(i["hospital_increase_per_region"])
+                print("Hierbij de informatie op de door u gekozen data:\n ")
+                print("Het aantal toenames van corona besmettingen op die dag is:  " + aantal_toenames)
+                print("Het totaal aantal corona besmettingen op die dag is:        " + aantal_besmettingen)
+                print("Het aantal toename in ziekenhuisopnames op die dag is:      " + toename_ziekenhuisopnames)
+                print("Het totaal aantal ziekenhuisopnames op die dag is:          " + aantal_ziekenhuisopnames)
+                break 
+else: 
+    print("Helaas, voor die datum is geen info beschikbaar.")
+
+
+
+#gebruiker een grafiek laten kiezen 
+grafiek = input("Naast deze informatie kunt u ook nog een grafiek zien: \n1. Van het aantal besmettingen \n2. Van het aantal ziekenhuisopnames \n\nWilt één van deze grafieken zien? Antwoord met het nummer van uw keus: \n\nAls u geen grafiek wil zien, kies dan 3.\n")
+
+
+
+#grafiek aantal besmettingen 
+if grafiek == "1" or grafiek == "1.":
+    print("De grafiek bevat informatie over de periode van 16-03 tot en met 06-10. \nDeze informatie gaat over de hoeveelheid coronabesmettingen. \nHierin staan gegevens van veiligheidsregio Groningen. \n")
+
+    dates = np.array([])                                     
+    reported = np.array([])  
+
+    for s in regio_data['results_per_region']['values']:                   
+        dates = np.append(dates, s['date_of_report_unix'])
+        reported = np.append(reported, s['total_reported_increase_per_region'])
+    
+               
+    fig = figure()
+    ax = fig.add_subplot(111)    
+    ax.plot(dates, reported, '#fbac32',label="besmettingen")
+    ax.set_title("Hoeveelheid coronabesmettingen in de veiligheidsregio Groningen")
+    ax.set_xlabel("Datum")
+    ax.set_ylabel("Besmettingen")
+    ax.legend()
+   
+    #datum staat nog in timestamps, zou in een volgende versie omgezet worden naar echte data. 
+
+
+
+
+#grafiek aantal ziekenhuisopnames
+if grafiek == "2" or grafiek == "2.":
+    print("De grafiek bevat informatie over de periode van 16-03 tot en met 06-10. \nDeze informatie gaat over de hoeveelheid ziekenhuisopnames. \nHierin staan gegevens van veiligheidsregio Groningen. \n")
+
+    dates = np.array([])                                     
+    opnames = np.array([])  
+
+    for s in regio_data['results_per_region']['values']:                   
+        dates = np.append(dates, s['date_of_report_unix'])
+        opnames = np.append(opnames, s['hospital_total_counts_per_region'])
+    
+               
+    fig = figure()
+    ax = fig.add_subplot(111)  
+    ax.scatter(dates, opnames, label = 'Ziekenhuisopnames', s=10, marker='*', color='#408d6c')
+    ax.set_title("Hoeveelheid ziekenhuisopnames in de veiligheidsregio Groningen")
+    ax.set_xlabel("Datum")
+    ax.set_ylabel("Ziekenhuisopnames")
+    ax.legend()
+
+    #datum staat nog in timestamps, zou in een volgende versie omgezet worden naar echte data. 
+    #deze grafiek lijkt raar qua cijfers, gedurende de hele periode +- 70 mensen in het ziekenhuis?
+
+
+
+
+#geen grafiek
+if grafiek == "3" or grafiek == '3.':
+    print("Jammer dat u de grafieken niet wilt bekijken " + username)
+    
+
+
+#einde programma 
+print("U bent bij het einde van het programma aangekomen. \nBedankt voor uw aandacht " + username + " en tot ziens!")
+
+#in een volgende versie de optie toevoegen om weer terug te gaan en een andere datum te kiezen
