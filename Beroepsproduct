@@ -96,17 +96,48 @@ if onderwerp == "Het aantal ziekenhuisopnames" or onderwerp == "Aantal ziekenhui
             print ("Het aantal ziekenhuisopnames is met " + aantal_ziekenhuisopnames + " opname(s) toegenomen")
  
 #DIT STUK IS VAN ROBIN ########################################################################################################       
-           
- if onderwerp == "Het aantal ziekenhuis verplaatsingen" or onderwerp == "het aantal ziekenhuis verplaatsingen" or onderwerp == "ziekenhuis verplaatsingen" or onderwerp == "ziekenhuisverplaatsing" or onderwerp == "Ziekenhuis verplaatsingen":
+ 
+ 
+    elif onderwerp == "3" or onderwerp == "3.":
 
-    maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het maandnummer in. \n "))
-    dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober en vul aub het 'dagnummer' in. \n "))
+        maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 1 april en 6 oktober en vul aub het maandnummer in. \n "))
+        dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 1 april en 6 oktober en vul aub het 'dagnummer' in. \n "))
 
-    datum = datetime(2020, maand, dag, 0, 0 ,0)
-    timestamp = datetime.timestamp(datum) + 3600 #omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil
+        datum = datetime(2020, maand, dag, 0, 0 ,0)
+        timestamp = datetime.timestamp(datum) + 7200 #omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil
+            #print(timestamp)
+
+        for s in regio_data["results_per_region"]["values"]:
+            if s["date_of_report_unix"] == timestamp:
+                ziekenhuis_verplaatsing = str(s["hospital_moving_avg_per_region"])
+                print("De hoeveelheid ziekenhuis verplaatsingen per regio is: " + ziekenhuis_verplaatsing)
+                break 
+        else: 
+            print('Helaas! Geen info voor deze data beschikbaar')
+
+        doorgaan = input("\nWilt u terug naar het keuzemenu? Keuze uit: \n 1. Ja \n 2. Nee \n \n Type het nummer van uw antwoord: ") #Vragen of je het programma wilt stoppen of opnieuw wilt doen
+        if doorgaan == "2" or doorgaan == "2.":    
+            print("Geen probleem, tot ziens")
+            break           
+      
+    elif onderwerp == "4" or onderwerp == "4.":   
+    
+        maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 1 april en 6 oktober en vul aub het maandnummer in. \n "))
+        dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 1 april en 6 oktober en vul aub het 'dagnummer' in. \n "))
+
+        datum = datetime(2020, maand, dag, 0, 0 ,0)
+        timestamp = datetime.timestamp(datum) + 7200 #omdat de timestamp niet overeen komt met die uit de coronamelder ivm een uur tijdsverschil
         #print(timestamp)
 
-    for s in regio_data["results_per_region"]["values"]:
-        if s["date_of_report_unix"] == timestamp:
-            ziekenhuis_verplaatsing = str(s["hospital_moving_avg_per_region"])
-            print("De hoeveelheid ziekenhuis verplaatsingen per regio is:" + ziekenhuis_verplaatsing)
+        for s in regio_data["results_per_region"]["values"]:
+            if s["date_of_report_unix"] == timestamp:
+                toenamebesmetting = str(s["infected_increase_per_region"])
+                print("De hoeveelheid toename in besmettingen per regio is: " + toenamebesmetting)
+                break 
+        else: 
+            print('Helaas! Geen info voor deze data beschikbaar')
+   
+        doorgaan = input("\nWilt u terug naar het keuzemenu? Keuze uit: \n 1. Ja \n 2. Nee \n \n Type het nummer van uw antwoord: ") #Vragen of je het programma wilt stoppen of opnieuw wilt doen
+        if doorgaan == "2" or doorgaan == "2.":    
+            print("Geen probleem, tot ziens")
+            break
