@@ -48,7 +48,7 @@ while (not Exit):
             # Kan opgelost worden door een GUI te maken: https://stackoverflow.com/questions/34938593/matplotlib-freezes-when-input-used-in-spyder
             
         elif welke_info == "2" or welke_info == "2.": #keuze voor informatie per specifieke dag 
-
+            #als je bijvoorbeeld van 16 maart gegevens wilt opvragen vul dan bij maand 3 in en bij dag 16. 03 werkt niet
             maand = int(input("\n Van welke maand wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul hier het 'maandnummer'in: "))
             dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul hier het 'dagnummer' in: "))
             print(Fore.RESET) #groene kleur weer uit!
