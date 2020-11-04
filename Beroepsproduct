@@ -15,7 +15,7 @@ while (not Exit):
     print("\n Welkom bij het interactieve CoronaMelder informatiecentrum " + username + "!") 
     onderwerp = input(" \n Waar wilt u informatie over? Kies uit: \n 1. Het aantal besmettingen \n 2. Het aantal ziekenhuisopnames \n 3. Het aantal ziekenhuisverplaatsingen \n 4. De toename in de hoeveelheid besmettingen per regio \n 5. Programma beeindigen. \n \n Vul het nummer van uw keuze in: \n ")
 
-#DIT STUK IS VAN DORINE ##################################################################################
+#DIT STUK IS VAN DORINE
 
     if "1" in onderwerp:
         #wat wil gebruiker weten, grafiek of informatie per dag?
@@ -53,10 +53,15 @@ while (not Exit):
             dag = int(input("\n Van welke dag wilt u informatie ontvangen? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul hier het 'dagnummer' in: "))
             print(Fore.RESET) #groene kleur weer uit!
             #de manier van vragen kan naar dd/mm/yyyy veranderd worden om User experience te verbeteren, maar weet niet hoe het moet
-           
-            datum = datetime(2020, maand, dag, 0, 0 ,0)
-            timestamp = datetime.timestamp(datum) + 3600 #omdat de timestamp niet overeen komt met die uit de coronamelder 
-            #ivm een uur tijdsverschil: waarschijnlijk het verschil zomertijd/ wintertijd
+            
+            #de if en elif zijn er ivm een uur tijdsverschil: waarschijnlijk het verschil zomertijd/ wintertijd
+            #voor nu is de oplossing dus: na maart +7200 en in maart nog +3600
+            if maand > 3: 
+                datum = datetime(2020, maand, dag, 0, 0 ,0)
+                timestamp = datetime.timestamp(datum) + 7200 #omdat de timestamp niet overeen komt met die uit de coronamelder
+            elif maand == 3:
+                datum = datetime(2020, maand, dag, 0, 0 ,0)
+                timestamp = datetime.timestamp(datum) + 3600
             
             timestampfound = False   #om te checken of er data is op de gegeven dag 
             for data_punt in regio_data["results_per_region"]["values"]:
@@ -79,7 +84,6 @@ while (not Exit):
     if "5" in onderwerp:
         print("Tot ziens!")
         Exit = True
-
 
 #DIT STUK IS VAN LAUREEN
 
