@@ -80,20 +80,55 @@ while (not Exit):
         print("Tot ziens!")
         Exit = True
 
-#DIT STUK IS VAN LAUREEN ########################################################################################################
+
+#DIT STUK IS VAN LAUREEN
+
+    elif onderwerp == "2" or onderwerp == "2.":
+        if True:
+            specifiek = input("\n Wat wilt u weten over het aantal ziekenhuisopnames van de veiligheidsregio Groningen? Kies uit (typ uw voorkeur in):\n ~ Toename op een dag\n ~ Totaal aantal vanaf 16 maart 2020\n ")
+    
+        if specifiek== "toename" or specifiek== "Toename" or specifiek== "Toename op een dag" or specifiek== "toename op een dag" or specifiek== "toename dag" or specifiek== "Toename dag":
+    
+            maand=int(input("\n Van welke maand wilt u informatie? \n U kunt kiezen uit data tussen 1 april en 6 oktober. \n Vul het maandcijfer in:\n "  ))
+            dag=int(input("\n Van welke dag wilt u informatie? \n U kunt kiezen uit data tussen 1 april en 6 oktober. \n Vul het cijfer van de dag in:\n "))
+            datum= datetime(2020, maand, dag, 0, 0, 0)
+            timestamp= datetime.timestamp(datum) + 7200 # +7200 omdat dit met de zomer/wintertijd te maken heeft, hierdoor kunnen de juiste timestamps opgevraagd worden
+            for x in regio_data["results_per_region"]["values"]:
+                if x ["date_of_report_unix"] == timestamp:
+                    aantal_ziekenhuisopnames = str(x["hospital_increase_per_region"])
+                    print ("\n Het aantal ziekenhuisopnames is met " + aantal_ziekenhuisopnames + " opname(s) toegenomen. ")
+                    break 
+            else: 
+                print("\n Helaas er zijn geen gegevens voor deze datum te vinden! ")
+                
+       
+            doorgaan = input("\n Wilt u terug naar het keuzemenu? Keuze uit 'Ja' of 'Nee'.\n ") #Vragen of je het programma wilt stoppen of opnieuw wilt doen
+            if doorgaan == "Nee" or doorgaan == "nee":    #Wanneer gebruiker nee zegt wordt het programma met tot ziens afgesloten
+                 print("\n Tot ziens")
+                 break           #Stoppen met het programma 
         
-if onderwerp == "Het aantal ziekenhuisopnames" or onderwerp == "Aantal ziekenhuisopnames" or onderwerp == "het aantal ziekenhuisopnames" or onderwerp == "aantal ziekenhuisopnames":
+        elif specifiek == "totaal" or specifiek == "Totaal" or specifiek == "totaal aantal" or specifiek == "Totaal aantal" or specifiek == "totaal aantal vanaf 16 maart 2020" or specifiek == "Totaal aantal vanaf 16 maart 2020" or specifiek == "totaal aantal vanaf 16 maart " or specifiek == "Totaal aantal vanaf 16 maart":
+            #totaal vanaf 16 maart omdat vanaf hier de data opgeteld wordt in het json bestand
+            jaar= 2020
+            maand=int(input("\n Van welke maand wilt u informatie? \n U kunt kiezen uit data tussen 1 april en 6 oktober. \n Vul het maandcijfer in: \n " ))
+            dag=int(input("\n Van welke dag wilt u informatie? \n U kunt kiezen uit data tussen 1 april en 6 oktober. \n Vul het cijfer van de dag in: \n "))
+            datum= datetime(jaar, maand, dag, 0, 0, 0)
+            timestamp= datetime.timestamp(datum) + 7200 # +7200 omdat dit met de zomer/eintertijd te maken heeft, hierdoor kunnen de juiste timestamps opgevraagd worden
     
-    jaar= 2020
-    maand=int(input("Van welke maand wilt u informatie? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul het maandcijfer in:"))
-    dag=int(input("Van welke dag wilt u informatie? \n U kunt kiezen uit data tussen 16 maart en 6 oktober. \n Vul het cijfer van de dag in:"))
-    datum= datetime(jaar, maand, dag)
-    timestamp= datetime.timestamp(datum) + 3600
-    
-    for i in regio_data["results_per_region"]["values"]:
-        if i ["date_of_report_unix"] == timestamp:
-            aantal_ziekenhuisopnames = str(i["hospital_increase_per_region"])
-            print ("Het aantal ziekenhuisopnames is met " + aantal_ziekenhuisopnames + " opname(s) toegenomen")
+            for x in regio_data["results_per_region"]["values"]:
+                if x ["date_of_report_unix"] == timestamp:
+                    totale_ziekenhuisopnames = str(x["hospital_total_counts_per_region"])
+                    print ("\n Het totaal aantal ziekenhuisopnames vanaf 16 maart 2020 is " + totale_ziekenhuisopnames +".")
+                    break 
+            else: 
+                print( "\n Helaas er zijn geen gegevens voor deze datum te vinden!  " )
+                    
+            doorgaan = input("\n Wilt u terug naar het keuzemenu? Keuze uit 'Ja' of 'Nee'.\n ") #Vragen of je het programma wilt stoppen of opnieuw wilt doen
+            if doorgaan == "Nee" or doorgaan == "nee":    #Wanneer gebruiker nee zegt wordt het programma met tot ziens afgesloten
+                 print("\n Tot ziens!")
+                 break           #Stoppen met het programma 
+        else:
+            print("\n U heeft waarschijnlijk een typefout gemaakt, u gaat terug naar het keuzemenu. ")
  
 #DIT STUK IS VAN ROBIN ########################################################################################################       
  
